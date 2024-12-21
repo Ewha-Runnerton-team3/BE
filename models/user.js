@@ -1,29 +1,31 @@
-import { Model, DataTypes } from 'sequelize';
-import { sequelize } from '.';
+import { DataTypes } from 'sequelize';
 
-module.exports = (sequelize) => {
-    class User extends Model{
-        static associate(models){
-            //모델 간 관계 설정
-        }
-    }
-
-    User.init(
-    {
-        social_id: {
+const UserModel = (sequelize) => {
+    const User = sequelize.define('User', {
+        id: {
+            type: DataTypes.BIGINT.UNSIGNED,
+            autoIncrement: true,
+            primaryKey: true,
+        },
+        loginId: {
             type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+        },
+        nickname: {
+            type: DataTypes.STRING,
+            allowNull: true,
         },
         password:{
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
         }
     },
     {
-        sequelize,
-        modelNmae: 'User',
-        tableName: 'users',
         timestamps: true,
-    }
-    );
+        tableName: 'users',
+    });
     return User;
-}
+};
+
+export default UserModel;
