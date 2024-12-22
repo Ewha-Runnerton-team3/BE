@@ -1,12 +1,12 @@
 import axios from 'axios';
 
-const kakaoImageSearch = async (query, size = 10, page = 1) => {
+const kakaoImageSearch = async (query) => {
   try {
     const response = await axios.get('https://dapi.kakao.com/v2/search/image', {
       headers: {
         Authorization: `KakaoAK ${process.env.REST_API_KEY}`,
       },
-      params: { query, size, page },
+      params: { query, size: 1 },
     });
     return response.data.documents; // 이미지 목록 반환
   } catch (error) {
