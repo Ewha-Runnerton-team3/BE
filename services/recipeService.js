@@ -1,12 +1,12 @@
-const { OpenAI } = require('openai');
-const Recipe = require('../models/recipe');
+import { OpenAI } from 'openai';
+import Recipe from '../models/recipe.js';
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
 // OpenAI를 사용하여 레시피 생성
-async function createRecipe(menu, userId) {
+export async function createRecipe(menu, userId) {
     const response = await openai.chat.completions.create({
         model: 'gpt-4o-mini',
         messages: [
@@ -66,7 +66,7 @@ async function createRecipe(menu, userId) {
 }
 
 // 사용자 히스토리 불러오기
-async function getUserHistory(userId) {
+export async function getUserHistory(userId) {
     const recipes = await Recipe.findAll({
         where: { userId },
         order: [['createdAt', 'DESC']],
