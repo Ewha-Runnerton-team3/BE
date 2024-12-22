@@ -1,4 +1,3 @@
-/*
 import { OpenAI } from 'openai';
 import RecipeModel from '../models/recipe.js';
 import dotenv from 'dotenv';
@@ -86,4 +85,3 @@ async function getUserHistory(userId) {
 }
 
 export { createRecipe, getUserHistory };
-*/
