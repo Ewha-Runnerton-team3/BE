@@ -95,24 +95,22 @@ router.post('/login', async (req, res) => {
   }
 });
 
-/*
-router.post('/logout', (req, res) => {
-    const token = req.headers.authorization?.split(' ')[1]; // Bearer 토큰에서 실제 토큰 추출
-    if (token) {
-      blacklist.add(token);
-    }
-    res.status(200).json({ 
-      success: true, 
-      message: '로그아웃 성공. 토큰이 무효화되었습니다.' 
-    });
-  });
-*/
 
-router.get('/logout', async (req, res) => {
-      res.clearCookie('token');
-      res.send('Logged out');
-    }
-);
+router.post('/logout', (req, res) => {
+  // JWT 로그아웃 처리
+  const token = req.headers.authorization?.split(' ')[1];
+  if (token) {
+    blacklist.add(token); // 토큰 블랙리스트 추가
+  }
+  
+  // 쿠키 로그아웃 처리 (예: 카카오 로그인 세션)
+  res.clearCookie('token');
+
+  res.status(200).json({ 
+    success: true, 
+    message: '모든 로그아웃 처리가 완료되었습니다.' 
+  });
+});
 
 
 export default router;
