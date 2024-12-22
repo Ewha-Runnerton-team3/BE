@@ -1,7 +1,10 @@
 import { OpenAI } from 'openai';
-import Recipe from '../models/recipe.js';
+import RecipeModel from '../models/recipe.js';
 import dotenv from 'dotenv';
 dotenv.config();
+
+import { sequelize } from '../models/index.js';
+const Recipe = RecipeModel(sequelize);
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,

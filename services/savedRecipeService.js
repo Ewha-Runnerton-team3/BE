@@ -1,6 +1,9 @@
-import SavedRecipe from '../models/savedRecipe.js';
-import Recipe from '../models/recipe.js';
+import SavedRecipeModel from '../models/savedRecipe.js';
+import RecipeModel from '../models/recipe.js';
 
+import { sequelize } from '../models/index.js';
+const Recipe = RecipeModel(sequelize);
+const SavedRecipe = SavedRecipeModel(sequelize, Recipe);
 
 // 레시피 저장
 async function saveRecipe(userId, recipeId) {
