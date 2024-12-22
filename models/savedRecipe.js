@@ -18,6 +18,10 @@ const SavedRecipeModel = (sequelize, Recipe) => {
         },
     });
 
+    // 관계 설정
+    SavedRecipe.belongsTo(Recipe, { foreignKey: 'recipeId' });
+    Recipe.hasMany(SavedRecipe, { foreignKey: 'recipeId' });
+
     return SavedRecipe;
 };
 
