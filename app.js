@@ -4,6 +4,7 @@ import { sequelize } from './models/index.js';
 import authRoutes from './routes/authRoutes.js';
 import recipeRoutes from './routes/recipeRoutes.js';
 import imageRoutes from './routes/imageRoutes.js';
+import menuRoutes from './routes/menuRoutes.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -19,6 +20,7 @@ app.use(cors());
 app.use('/auth', authRoutes);
 app.use('/recipe', recipeRoutes);
 app.use('/image', imageRoutes);
+app.use('/menu', menuRoutes);
 
 // 데이터베이스 초기화 (개발 환경에서만)
 const initializeDatabase = async () => {
