@@ -1,13 +1,14 @@
-const SavedRecipe = require('../models/savedRecipe');
-const Recipe = require('../models/recipe');
+import SavedRecipe from '../models/savedRecipe.js';
+import Recipe from '../models/recipe.js';
+
 
 // 레시피 저장
-export async function saveRecipe(userId, recipeId) {
+async function saveRecipe(userId, recipeId) {
     return await SavedRecipe.create({ userId, recipeId });
 }
 
 // 저장된 레시피 가져오기
-export async function getSavedRecipes(userId) {
+async function getSavedRecipes(userId) {
     const savedRecipes = await SavedRecipe.findAll({
         where: { userId },
         include: Recipe,
@@ -20,14 +21,10 @@ export async function getSavedRecipes(userId) {
 }
 
 // 저장된 레시피 삭제
-export async function deleteSavedRecipe(userId, recipeId) {
+async function deleteSavedRecipe(userId, recipeId) {
     return await SavedRecipe.destroy({
         where: { userId, recipeId },
     });
 }
 
-module.exports = {
-    saveRecipe,
-    getSavedRecipes,
-    deleteSavedRecipe,
-};
+export { saveRecipe, getSavedRecipes, deleteSavedRecipe };

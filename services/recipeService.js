@@ -1,12 +1,14 @@
 import { OpenAI } from 'openai';
 import Recipe from '../models/recipe.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
 // OpenAI를 사용하여 레시피 생성
-export async function createRecipe(menu, userId) {
+async function createRecipe(menu, userId) {
     const response = await openai.chat.completions.create({
         model: 'gpt-4o-mini',
         messages: [
@@ -66,7 +68,7 @@ export async function createRecipe(menu, userId) {
 }
 
 // 사용자 히스토리 불러오기
-export async function getUserHistory(userId) {
+async function getUserHistory(userId) {
     const recipes = await Recipe.findAll({
         where: { userId },
         order: [['createdAt', 'DESC']],
@@ -79,7 +81,4 @@ export async function getUserHistory(userId) {
     }));
 }
 
-module.exports = {
-    createRecipe,
-    getUserHistory,
-};
+export { createRecipe, getUserHistory };

@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cors());
 //app.use('/auth', authRoutes);
-app.use('/recipes', recipeRoutes);
+app.use('/recipe', recipeRoutes);
 app.use('/', example);                                  //예시
 dotenv.config();
 
