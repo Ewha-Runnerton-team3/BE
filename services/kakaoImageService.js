@@ -1,12 +1,10 @@
 import kakaoImageSearch from '../utils/kakaoImage.js';
 
-const getImages = async (searchTerm) => {
+const getImage = async (searchTerm) => {
   try {
-    const images = await kakaoImageSearch(searchTerm);
-    return images.map((image) => ({
-      thumbnail: image.thumbnail_url,
+    const image = await kakaoImageSearch(searchTerm);
+    return image.map((image) => ({
       url: image.image_url,
-      source: image.display_sitename,
     }));
   } catch (error) {
     console.log(error.message);
@@ -14,4 +12,4 @@ const getImages = async (searchTerm) => {
   }
 };
 
-export default getImages;
+export default getImage;
