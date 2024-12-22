@@ -1,4 +1,4 @@
-# 👩‍🍳당신을 위한 레시피, 쿡핏 : COOK FIT
+# 👩‍🍳당신을 위한 레시피  "쿡핏 : COOK FIT"
 <img src="./logo.png"/>
 
 ## 프로젝트 소개
@@ -7,9 +7,9 @@
 사용자 경험을 중심으로, 간편하고 효율적인 레시피 관리와 추천 알고리즘을 제공합니다.
 
 ## ✨ 기능
-- 사용자 맞춤형 레시피 추천
-- 레시피 저장
-- 데이터 분석 기반 추천 알고리즘
+✅ ChatGPT-API를 사용한 사용자 맞춤형 레시피 추천
+✅ 레시피 저장
+✅ 데이터 분석 기반 재료 기반 메뉴 추천 알고리즘
 
 ## 👥Runner Team3
 <table border="1">
@@ -50,9 +50,10 @@
 - 개발 기간 : 2024.12.21 ~ 2024.12.23
 
 - stack <br> 
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white) Node.js
-![Sequelize](https://img.shields.io/badge/Sequelize-52B0E7?style=for-the-badge&logo=Sequelize&logoColor=white) Sequelize
-![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black) React
-![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=TypeScript&logoColor=white) TypeScript
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white) Python
-![Pandas](https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=Pandas&logoColor=white) Pandas
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white)
+![Sequelize](https://img.shields.io/badge/Sequelize-52B0E7?style=for-the-badge&logo=Sequelize&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=TypeScript&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=Pandas&logoColor=white)
+![ChatGPT](https://img.shields.io/badge/ChatGPT-412991?style=for-the-badge&logo=openai&logoColor=white)
