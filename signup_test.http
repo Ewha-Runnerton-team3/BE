@@ -25,4 +25,5 @@ POST http://localhost:3000/auth/logout
 GET http://localhost:3000/auth/kakao
 
 
-GET http://localhost:3000/auth/logout
+###이미지 검색
+GET http://localhost:3000/image/image?query=순두부찌개
