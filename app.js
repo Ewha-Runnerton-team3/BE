@@ -1,18 +1,16 @@
 import express from 'express';
 import cors from 'cors';
 import { sequelize } from './models/index.js';
-//import authRoutes from './routes/authRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 import recipeRoutes from './routes/recipeRoutes.js';
-import example from './routes/example.js';
 import dotenv from 'dotenv';
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cors());
-//app.use('/auth', authRoutes);
+app.use('/auth', authRoutes);
 app.use('/recipe', recipeRoutes);
-app.use('/', example);                                  //예시
 dotenv.config();
 
 //데이터베이스 연결
