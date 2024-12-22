@@ -29,18 +29,12 @@ const RecipeModel = (sequelize) => {
                 allowNull: false,
             },
             userId: {
-                type: DataTypes.INTEGER, // 사용자와 연결될 외래 키
+                type: DataTypes.BIGINT.UNSIGNED, // 사용자와 연결될 외래 키
                 allowNull: false,
-                references: {
-                    model: 'Users', // Users 테이블과 연결
-                    key: 'id',
-                },
-                onDelete: 'CASCADE', // 사용자가 삭제되면 레시피도 삭제
-                onUpdate: 'CASCADE',
             },
         },
         {
-            tableName: 'Recipes', // 테이블 이름 명시
+            tableName: 'recipes', // 테이블 이름 명시
             timestamps: true, // createdAt, updatedAt 자동 생성
         }
     );
