@@ -11,9 +11,11 @@ dotenv.config();
 const app = express();
 
 // 미들웨어 설정
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000', // 환경 변수로 프론트엔드 URL 설정
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+}));
 
 // 라우트 설정
 app.use('/auth', authRoutes);
