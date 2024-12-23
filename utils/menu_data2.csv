@@ -1,0 +1,97 @@
+menu,ingredients,cuisine,method
+Kung Pao Chicken,"chicken, peanuts, chili, soy sauce",Chinese,stir-fry
+Spaghetti Bolognese,"pasta, tomato, ground beef, onion",Italian,stir-fry
+Sushi,"rice, fish, seaweed",Japanese,raw
+Grilled Mackerel,"mackerel, salt, lemon",Korean,grill
+Caesar Salad,"romaine lettuce, croutons, parmesan, caesar dressing",American,toss
+Pad Thai,"rice noodles, shrimp, egg, tamarind sauce",Thai,stir-fry
+Tacos,"tortilla, ground beef, lettuce, cheese",Mexican,assemble
+Beef Stroganoff,"beef, mushrooms, onion, sour cream",Russian,stew
+Chicken Tikka,"chicken, yogurt, spices, lemon juice",Indian,grill
+Pho,"rice noodles, beef, bean sprouts, broth",Vietnamese,boil
+Hamburger,"bun, beef patty, lettuce, tomato",American,grill
+Fish and Chips,"fish, potatoes, flour, oil",British,fry
+Moussaka,"eggplant, ground beef, béchamel sauce, tomato",Greek,bake
+Falafel,"chickpeas, parsley, garlic, cumin",Middle Eastern,fry
+Pancakes,"flour, milk, eggs, butter",American,grill
+Tom Yum Soup,"shrimp, lemongrass, lime, chili",Thai,boil
+Lasagna,"pasta sheets, tomato sauce, ground beef, mozzarella",Italian,bake
+Chicken Curry,"chicken, curry powder, coconut milk, onion",Indian,stew
+Burrito,"tortilla, rice, beans, cheese",Mexican,wrap
+Quiche,"eggs, cream, spinach, pie crust",French,bake
+Paella,"rice, saffron, seafood, chicken",Spanish,stir-fry
+Goulash,"beef, paprika, onion, tomato",Hungarian,stew
+Bibimbap,"rice, vegetables, egg, chili paste",Korean,assemble
+Ceviche,"fish, lime, onion, chili",Peruvian,raw
+Chicken Alfredo,"pasta, chicken, cream, parmesan",Italian,stir-fry
+Carbonara,"spaghetti, egg, pancetta, parmesan",Italian,stir-fry
+Tempura,"shrimp, flour, egg, oil",Japanese,fry
+Ratatouille,"zucchini, eggplant, tomato, bell pepper",French,stew
+Peking Duck,"duck, hoisin sauce, scallions, pancakes",Chinese,roast
+Shakshuka,"eggs, tomato, bell pepper, onion",Middle Eastern,stew
+Cobb Salad,"lettuce, chicken, avocado, bacon",American,toss
+Chili Con Carne,"ground beef, beans, tomato, chili",Mexican,stew
+Pierogi,"dumplings, potato, cheese, onion",Polish,boil
+Clam Chowder,"clams, potatoes, cream, onion",American,stew
+French Onion Soup,"onion, beef broth, bread, cheese",French,boil
+Dim Sum,"dumplings, pork, shrimp, soy sauce",Chinese,steam
+Stuffed Bell Peppers,"bell peppers, rice, ground beef, tomato",American,bake
+Gnocchi,"potatoes, flour, egg, cheese",Italian,boil
+Fried Rice,"rice, egg, vegetables, soy sauce",Chinese,stir-fry
+Kebab,"lamb, onion, garlic, spices",Middle Eastern,grill
+Samosa,"potatoes, peas, spices, pastry",Indian,fry
+Fajitas,"tortilla, chicken, bell peppers, onion",Mexican,stir-fry
+Crème Brûlée,"cream, egg yolk, sugar, vanilla",French,bake
+Waffles,"flour, milk, eggs, sugar",Belgian,grill
+Stuffed Cabbage,"cabbage, rice, ground beef, tomato",Polish,boil
+Tiramisu,"mascarpone, coffee, ladyfingers, cocoa",Italian,assemble
+Chicken Satay,"chicken, peanut sauce, spices, skewers",Thai,grill
+Spring Rolls,"rice paper, vegetables, shrimp, soy sauce",Vietnamese,roll
+Ramen,"noodles, broth, egg, pork",Japanese,boil
+Teriyaki Chicken,"chicken, soy sauce, sugar, ginger",Japanese,stir-fry
+Lobster Bisque,"lobster, cream, butter, onion",French,boil
+Hummus,"chickpeas, tahini, garlic, lemon",Middle Eastern,blend
+Pesto Pasta,"pasta, basil, garlic, parmesan",Italian,stir-fry
+Shabu Shabu,"beef, vegetables, broth, noodles",Japanese,boil
+Fish Tacos,"tortilla, fish, cabbage, lime",Mexican,assemble
+Croissant,"flour, butter, yeast, sugar",French,bake
+Bagel with Lox,"bagel, salmon, cream cheese, onion",American,assemble
+Okonomiyaki,"flour, egg, cabbage, pork",Japanese,grill
+Churros,"flour, sugar, oil, cinnamon",Spanish,fry
+Empanadas,"pastry, beef, onion, spices",Spanish,bake
+Vegetable Stir-fry,"broccoli, carrots, bell peppers, soy sauce",Chinese,stir-fry
+Seafood Gumbo,"shrimp, crab, okra, rice",American,stew
+Cornbread,"cornmeal, flour, sugar, butter",American,bake
+Butter Chicken,"chicken, tomato, cream, spices",Indian,stew
+Shepherd's Pie,"ground lamb, potatoes, carrots, peas",British,bake
+Gazpacho,"tomato, cucumber, bell pepper, garlic",Spanish,blend
+Thai Green Curry,"chicken, green curry paste, coconut milk, basil",Thai,stew
+Beef Wellington,"beef, pastry, mushroom, prosciutto",British,bake
+Roast Turkey,"turkey, butter, herbs, garlic",American,roast
+Panna Cotta,"cream, sugar, gelatin, vanilla",Italian,chill
+Mango Sticky Rice,"mango, rice, coconut milk, sugar",Thai,assemble
+Banoffee Pie,"banana, caramel, cream, pie crust",British,assemble
+Chicken Fajitas,"chicken, bell peppers, onion, tortilla",Mexican,stir-fry
+Greek Salad,"tomato, cucumber, feta cheese, olives",Greek,toss
+Pumpkin Soup,"pumpkin, cream, onion, broth",American,boil
+Tandoori Chicken,"chicken, yogurt, spices, lemon",Indian,grill
+Risotto,"arborio rice, broth, parmesan, onion",Italian,stir-fry
+Calzone,"pizza dough, cheese, tomato sauce, ham",Italian,bake
+Chicken Caesar Wrap,"chicken, lettuce, caesar dressing, tortilla",American,wrap
+Mac and Cheese,"pasta, cheddar, milk, butter",American,bake
+Duck Confit,"duck, garlic, thyme, salt",French,roast
+Chocolate Fondue,"chocolate, cream, fruit, marshmallows",Swiss,dip
+Beetroot Salad,"beetroot, goat cheese, walnuts, spinach",French,toss
+Kimchi Fried Rice,"rice, kimchi, egg, soy sauce",Korean,stir-fry
+Eggplant Parmesan,"eggplant, tomato sauce, mozzarella, parmesan",Italian,bake
+Chicken Noodle Soup,"chicken, noodles, carrots, celery",American,boil
+Falafel Wrap,"falafel, pita bread, lettuce, tahini sauce",Middle Eastern,wrap
+Onigiri,"rice, seaweed, pickled plum, sesame",Japanese,assemble
+Crepes,"flour, milk, eggs, butter",French,grill
+Sichuan Hot Pot,"broth, beef, vegetables, spices",Chinese,boil
+Yorkshire Pudding,"flour, eggs, milk, beef drippings",British,bake
+Bulgogi,"beef, soy sauce, sugar, garlic",Korean,grill
+Eton Mess,"strawberries, meringue, cream, sugar",British,assemble
+Pot Roast,"beef, potatoes, carrots, onion",American,stew
+Beef Bulgogi,"beef, soy sauce, garlic, sesame",Korean,grill
+Shrimp Scampi,"shrimp, garlic, butter, pasta",Italian,stir-fry

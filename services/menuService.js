@@ -23,15 +23,18 @@ export const runPythonScript = (inputJson) => {
         let error = '';  // Python 스크립트에서 반환된 에러 메시지 저장
 
         // Python 스크립트로 JSON 데이터 전송
-        pythonProcess.stdin.write(Buffer.from(JSON.stringify(inputJson), 'utf-8'));
+        const encodedInput = Buffer.from(JSON.stringify(inputJson), 'utf-8');
+        pythonProcess.stdin.write(encodedInput);
         pythonProcess.stdin.end();
 
         // Python 스크립트에서 출력 데이터를 수집
+        pythonProcess.stdout.setEncoding('utf-8'); // UTF-8로 설정
         pythonProcess.stdout.on('data', (data) => {
             result += data.toString();
         });
 
         // Python 스크립트에서 에러 데이터를 수집
+        pythonProcess.stderr.setEncoding('utf-8');
         pythonProcess.stderr.on('data', (data) => {
             error += data.toString();
         });

@@ -1,12 +1,18 @@
 import pandas as pd
 import json
 import sys
+import io
 
-# CSV file path
-menu_df = pd.read_csv(".\menu_data.csv")
 
-# Remove duplicates
+# CSV 파일 경로
+file_path = r"C:\Users\DesignPC\Documents\GitHub\BE\utils\menu_data2.csv"
+
+# CSV 파일 읽기 (UTF-8-SIG 처리)
+menu_df = pd.read_csv(file_path, encoding="utf-8-sig")
+
+# 중복 데이터 제거
 menu_df = menu_df.drop_duplicates(subset=["menu", "ingredients", "cuisine", "method"])
+
 
 # Menu recommendation function
 def recommend_menu(user_ingredients, user_method, user_cuisine, min_match_rate=30):
@@ -50,15 +56,14 @@ def recommend_menu(user_ingredients, user_method, user_cuisine, min_match_rate=3
 # Main execution
 def main():
     try:
-        input_data = sys.stdin.read().strip()
+        input_data = sys.stdin.read()
         input_json = json.loads(input_data)
         print(input_json)
-
+        
         # Extract user input
         user_ingredients = input_json.get("ingredients", [])
         user_method = input_json.get("method", "")
         user_cuisine = input_json.get("cuisine", "")
-        print(user_ingredients)
         
         # Get menu recommendations
         recommendations = recommend_menu(user_ingredients, user_method, user_cuisine, min_match_rate=30)
