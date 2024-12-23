@@ -26,7 +26,6 @@
   </tr>
   <tr>
     <td>박인애</td>
-    <td>BackEnd</td>
     <td>FrontEnd</td>
     <td>프론트엔드 개발</td>
   </tr>
@@ -34,7 +33,6 @@
     <td>유혜진</td>
     <td>BackEnd</td>
     <td>레시피 생성 및 저장, 히스토리 관리</td>
-    <td>프론트엔드 개발</td>
   </tr>
   <tr>
     <td>이다빈</td>
