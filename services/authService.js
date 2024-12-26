@@ -54,7 +54,7 @@ async function signupUser({ loginId, nickname, password }) {
 }
 
 // 일반 로그인 처리
-async function loginUser({ loginId, password }) {
+async function loginUser({ loginId, password } = {}) {
   try {
     const user = await User.findOne({ where: { loginId } });
 

@@ -88,6 +88,9 @@ router.post('/signup', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const { loginId, password } = req.body;
+    if (!loginId || !password) {
+      return res.status(400).json({ message: 'loginId와 password를 모두 제공해야 합니다.' });
+    }
     const { user, token } = await loginUser({ loginId, password });
     res.status(200).json({ user, token }); // 성공 응답
   } catch (error) {

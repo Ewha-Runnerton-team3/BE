@@ -5,6 +5,7 @@ import authRoutes from './routes/authRoutes.js';
 import recipeRoutes from './routes/recipeRoutes.js';
 import imageRoutes from './routes/imageRoutes.js';
 import dotenv from 'dotenv';
+import bodyParser from 'body-parser';
 
 dotenv.config();
 
@@ -12,10 +13,12 @@ const app = express();
 
 // 미들웨어 설정
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000', // 환경 변수로 프론트엔드 URL 설정
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173', // 환경 변수로 프론트엔드 URL 설정
     credentials: true
 }));
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // 라우트 설정
 app.use('/auth', authRoutes);
