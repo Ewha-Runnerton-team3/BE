@@ -65,7 +65,9 @@ router.get('/kakao/callback', async (req, res) => {
     } catch (error) {
       console.error('카카오 로그인 에러:', error);
       console.error(error.message);
-      res.status(500).json({ message: '카카오 로그인 처리 중 오류가 발생했습니다.' });
+      res.status(500).json({ message: '카카오 로그인 처리 중 오류가 발생했습니다.',
+        data: error.data,
+       });
     }
   });
 
@@ -92,6 +94,15 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'loginId와 password를 모두 제공해야 합니다.' });
     }
     const { user, token } = await loginUser({ loginId, password });
+
+    // 쿠키 설정
+    res.cookie('token', token, {
+      httpOnly: true,
+      sameSite: 'None',
+      secure: true, // SameSite='None'을 사용할 때는 반드시 Secure 플래그도 설정해야 합니다.
+      maxAge: 3600000
+    });
+
     res.status(200).json({ user, token }); // 성공 응답
   } catch (error) {
     res.status(401).json({ message: error.message }); // 에러 응답

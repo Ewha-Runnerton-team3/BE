@@ -1,10 +1,11 @@
 import express from 'express';
 import { runPythonScript } from '../services/menuService.js';
+import authenticateToken from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
 // 메뉴 추천 요청 처리
-router.post('/recommendation', async (req, res) => {
+router.post('/recommendation', authenticateToken, async (req, res) => {
     try {
         // 요청 본문에서 매개변수 추출
         const { ingredients, cuisine, method } = req.body;

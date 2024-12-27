@@ -8,12 +8,13 @@ import {
     getSavedRecipes, 
     deleteSavedRecipe 
 } from '../services/savedRecipeService.js';
+import authenticateToken from '../middleware/authMiddleware.js';
 
 const router = Router();
 
 
 // 레시피 생성 요청 처리
-router.post('/', async (req, res) => {
+router.post('/', authenticateToken, async (req, res) => {
     const { menu, userId } = req.body;
 
     if (!menu) {

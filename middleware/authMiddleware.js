@@ -1,4 +1,5 @@
-import { verify } from 'jsonwebtoken';
+import pkg from 'jsonwebtoken';
+const { verify } = pkg;
 
 // 인증 미들웨어
 const authenticateToken = (req, res, next) => {
