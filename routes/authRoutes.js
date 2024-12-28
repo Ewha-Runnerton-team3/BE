@@ -38,6 +38,7 @@ router.get('/kakao/callback', async (req, res) => {
       });
   
       const accessToken = tokenResponse.data.access_token;
+      console.log('Access Token:', accessToken);
   
       const userResponse = await axios({
         method: 'GET',
@@ -53,18 +54,25 @@ router.get('/kakao/callback', async (req, res) => {
       };
   
       const { user, token } = await loginOrSignupKakaoUser(kakaoUserInfo);
-  
-      res.status(200).json({ 
-        message: '카카오 로그인 성공', 
-        user: {
-          loginId: user.loginId,
-          nickname: user.nickname
-        },
-        token 
+
+      // JWT 토큰을 HttpOnly 쿠키에 저장
+      res.cookie('auth_token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV,
+        sameSite: 'strict',
+        maxAge: 3600000 // 1시간
       });
+
+      // 클라이언트 리다이렉션 URL (프론트엔드 주소로 변경해야 함)
+      const clientRedirectUrl = `http://localhost:5173/?token=${encodeURIComponent(token)}&loginId=${encodeURIComponent(user.loginId)}&nickname=${encodeURIComponent(user.nickname)}`;
+
+      // 클라이언트로 리다이렉션
+      res.redirect(clientRedirectUrl);
+
     } catch (error) {
       console.error('카카오 로그인 에러:', error);
       console.error(error.message);
+      console.error('Error getting Kakao token:', error.response ? error.response.data : error.message);
       res.status(500).json({ message: '카카오 로그인 처리 중 오류가 발생했습니다.',
         data: error.data,
        });
