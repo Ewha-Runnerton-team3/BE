@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu Recommendation Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+    }
+    input, button {
+      margin: 5px 0;
+      padding: 10px;
+      width: 100%;
+    }
+    .result {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Menu Recommendation Test</h1>
+    <form id="recommendationForm">
+      <label for="ingredients">Enter ingredients (comma-separated):</label>
+      <input type="text" id="ingredients" placeholder="e.g., 연두부, 칵테일새우, 달걀">
+      <button type="submit">Get Recommendations</button>
+    </form>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    document.getElementById('recommendationForm').addEventListener('submit', async (event) => {
+      event.preventDefault(); // Form 기본 동작 막기
+
+      const ingredientsInput = document.getElementById('ingredients').value;
+      const ingredients = ingredientsInput.split(',').map((item) => item.trim()); // 재료를 배열로 변환
+
+      if (ingredients.length === 0 || !ingredients[0]) {
+        alert('Please enter at least one ingredient.');
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:3000/menu/recommendation', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ ingredients }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch recommendations.');
+        }
+
+        const data = await response.json();
+        displayResults(data.menus);
+      } catch (error) {
+        document.getElementById('result').innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+      }
+    });
+
+    function displayResults(menus) {
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = '';
+
+      if (menus.length === 0) {
+        resultDiv.innerHTML = '<p>No matching menus found.</p>';
+        return;
+      }
+
+      menus.forEach((menu) => {
+        const menuDiv = document.createElement('div');
+        menuDiv.style.border = '1px solid #ccc';
+        menuDiv.style.margin = '10px 0';
+        menuDiv.style.padding = '10px';
+
+        menuDiv.innerHTML = `
+          <h3>${menu.menu_name}</h3>
+          <p><strong>Ingredients:</strong> ${menu.ingredients.join(', ')}</p>
+          <p><strong>Calories:</strong> ${menu.calories}</p>
+          <p><strong>Match Rate:</strong> ${(menu.match_rate * 100).toFixed(2)}%</p>
+        `;
+
+        resultDiv.appendChild(menuDiv);
+      });
+    }
+  </script>
+</body>
+</html>

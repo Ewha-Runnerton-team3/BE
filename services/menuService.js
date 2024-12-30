@@ -1,57 +1,63 @@
-import { spawn } from 'child_process';
+import fs from 'fs';
+import csvParser from 'csv-parser';
 import path from 'path';
-import { fileURLToPath } from 'url';
 
-// 현재 파일의 경로 및 디렉토리 경로 가져오기
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+let recipes = []; // 전체 레시피 데이터
+let ingredientIndex = {}; // 해시 테이블
 
-// Python 스크립트 파일 경로 설정
-const pythonScriptPath = path.join(__dirname, '../utils/menuRecommendation.py');
+// CSV 데이터 로드 및 해시 테이블 생성 함수
+export const loadMenuData = () => {
+    const csvFilePath = path.join(process.cwd(), 'utils', 'menus.csv');
+    fs.createReadStream(csvFilePath)
+        .pipe(csvParser())
+        .on('data', (row) => {
+            // 재료를 배열로 변환
+            row.ingredients = row.ingredients.split(',');
+            recipes.push(row);
 
-/**
- * Python 스크립트를 실행하고 결과를 반환하는 함수
- * @param {Object} inputJson - Python 스크립트에 전달할 JSON 입력 데이터
- * @returns {Promise} - Python 스크립트의 결과를 반환하는 Promise
- */
-export const runPythonScript = (inputJson) => {
-    return new Promise((resolve, reject) => {
-        // Python 스크립트 실행
-        const pythonProcess = spawn('python', [pythonScriptPath]);
-
-        let result = ''; // Python 스크립트에서 반환된 데이터 저장
-        let error = '';  // Python 스크립트에서 반환된 에러 메시지 저장
-
-        // Python 스크립트로 JSON 데이터 전송
-        const encodedInput = Buffer.from(JSON.stringify(inputJson), 'utf-8');
-        pythonProcess.stdin.write(encodedInput);
-        pythonProcess.stdin.end();
-
-        // Python 스크립트에서 출력 데이터를 수집
-        pythonProcess.stdout.setEncoding('utf-8'); // UTF-8로 설정
-        pythonProcess.stdout.on('data', (data) => {
-            result += data.toString();
-        });
-
-        // Python 스크립트에서 에러 데이터를 수집
-        pythonProcess.stderr.setEncoding('utf-8');
-        pythonProcess.stderr.on('data', (data) => {
-            error += data.toString();
-        });
-
-        // Python 스크립트 종료 시 처리
-        pythonProcess.on('close', (code) => {
-            if (code === 0) {
-                try {
-                    //const parsedResult = JSON.parse(result); // 결과를 JSON으로 파싱
-                    //resolve(parsedResult); // 파싱된 결과를 반환
-                    resolve(result);
-                } catch (err) {
-                    reject(new Error('Python 스크립트 출력 파싱 중 오류 발생'));
+            // 해시 테이블 생성
+            row.ingredients.forEach((ingredient) => {
+                if (!ingredientIndex[ingredient]) {
+                    ingredientIndex[ingredient] = [];
                 }
-            } else {
-                reject(new Error(`Python 스크립트가 코드 ${code}로 종료됨: ${error}`));
-            }
+                ingredientIndex[ingredient].push(row); // 해당 재료가 포함된 메뉴 추가
+            });
+        })
+        .on('end', () => {
+            console.log('CSV 데이터 및 해시 테이블 로드 완료');
+        })
+        .on('error', (err) => {
+            console.error('CSV 파일을 읽는 중 오류 발생:', err.message);
         });
+};
+
+export const recommendMenus = (ingredients) => {
+    // 입력된 재료로 관련 메뉴 검색
+    const matchedMenusSet = new Set(); // 중복 제거를 위해 Set 사용
+    ingredients.forEach((ingredient) => {
+        if (ingredientIndex[ingredient]) {
+            ingredientIndex[ingredient].forEach((menu) => matchedMenusSet.add(menu));
+        }
     });
+
+    // Set을 배열로 변환하여 일치율 계산
+    const matchedMenus = Array.from(matchedMenusSet).map((menu) => {
+        const recipeIngredients = menu.ingredients;
+        const intersection = ingredients.filter((ingredient) =>
+            recipeIngredients.includes(ingredient)
+        );
+        const matchRate = intersection.length / recipeIngredients.length; // 일치율 계산
+
+        return {
+            menu_name: menu.menu_name,
+            ingredients: recipeIngredients,
+            calories: menu.calories,
+            match_rate: matchRate,
+        };
+    });
+
+    // 일치율 순으로 정렬 후 상위 3개 선택
+    return matchedMenus
+        .sort((a, b) => b.match_rate - a.match_rate) // 내림차순 정렬
+        .slice(0, 3); // 상위 3개 선택
 };
