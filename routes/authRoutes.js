@@ -38,8 +38,8 @@ router.get('/kakao/callback', async (req, res) => {
       });
   
       const accessToken = tokenResponse.data.access_token;
-      console.log('Access Token:', accessToken);
-  
+      console.log('Access Token:', accessToken);                //점검용1
+
       const userResponse = await axios({
         method: 'GET',
         url: 'https://kapi.kakao.com/v2/user/me',
@@ -52,16 +52,18 @@ router.get('/kakao/callback', async (req, res) => {
         id: userResponse.data.id.toString(),
         kakao_account: userResponse.data.kakao_account,
       };
-  
+
       const { user, token } = await loginOrSignupKakaoUser(kakaoUserInfo);
 
       // JWT 토큰을 HttpOnly 쿠키에 저장
-      res.cookie('auth_token', token, {
+      res.cookie('token', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV,
-        sameSite: 'strict',
+        sameSite: 'None',
+        secure: true,
         maxAge: 3600000 // 1시간
       });
+
+      console.log('user Data:', user.loginId, user.nickname);           //점검용2
 
       // 클라이언트 리다이렉션 URL (프론트엔드 주소로 변경해야 함)
       const clientRedirectUrl = `http://localhost:5173/?token=${encodeURIComponent(token)}&loginId=${encodeURIComponent(user.loginId)}&nickname=${encodeURIComponent(user.nickname)}`;
