@@ -66,7 +66,7 @@ router.get('/kakao/callback', async (req, res) => {
       console.log('user Data:', user.loginId, user.nickname);           //점검용2
 
       // 클라이언트 리다이렉션 URL (프론트엔드 주소로 변경해야 함)
-      const clientRedirectUrl = `http://localhost:5173/?token=${encodeURIComponent(token)}&loginId=${encodeURIComponent(user.loginId)}&nickname=${encodeURIComponent(user.nickname)}`;
+      const clientRedirectUrl = `http://localhost:5173/auth/kakao/callback?token=${encodeURIComponent(token)}&loginId=${encodeURIComponent(user.loginId)}&nickname=${encodeURIComponent(user.nickname)}`;
 
       // 클라이언트로 리다이렉션
       res.redirect(clientRedirectUrl);

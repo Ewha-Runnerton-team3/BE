@@ -10,7 +10,7 @@ const User = UserModel(sequelize);
 async function loginOrSignupKakaoUser(kakaoUserInfo) {
   const { id: kakaoId, kakao_account } = kakaoUserInfo;
 
-  const nickname = kakao_account.profile.nickname? kakao_account.profile.nickname: null;
+  const nickname = kakao_account.profile.nickname? kakao_account.profile.nickname: '익명의 사용자';
 
   try {
     let user = await User.findOne({ where: { loginId: kakaoId } });
