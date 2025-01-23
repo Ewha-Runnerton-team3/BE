@@ -137,4 +137,35 @@ router.post('/logout', (req, res) => {
 });
 
 
+router.post('/kakaologout', async (req, res) => {
+  try {
+    const accessToken = req.headers.authorization?.split(' ')[1];
+    if (accessToken) {
+      // 카카오 로그아웃 API 호출
+      await axios.post('https://kapi.kakao.com/v1/user/logout', null, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      });
+      
+      // 토큰 블랙리스트 추가 (선택적)
+      blacklist.add(accessToken);
+    }
+    
+    // 쿠키 제거
+    res.clearCookie('token');
+  
+    res.status(200).json({ 
+      success: true, 
+      message: '로그아웃 처리가 완료되었습니다.' 
+    });
+  } catch (error) {
+    console.error('카카오 로그아웃 에러:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: '로그아웃 처리 중 오류가 발생했습니다.' 
+    });
+  }
+});
+
 export default router;
