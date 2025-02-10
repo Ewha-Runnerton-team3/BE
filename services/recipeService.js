@@ -1,87 +1,191 @@
-import { OpenAI } from 'openai';
-import RecipeModel from '../models/recipe.js';
-import dotenv from 'dotenv';
-dotenv.config();
+import dotenv from "dotenv";
+dotenv.config(); // 환경 변수 먼저 로드
 
-import { sequelize } from '../models/index.js';
-const Recipe = RecipeModel(sequelize);
+import puppeteer from "puppeteer";
+import axios from "axios";
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
+const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
+const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
-// OpenAI를 사용하여 레시피 생성
-async function createRecipe(menu, userId) {
-    const response = await openai.chat.completions.create({
-        model: 'gpt-4o-mini',
-        messages: [
-            {
-                role: 'system',
-                content: `
-                You are a chef who provides recipes in JSON format. 
-                Include detailed instructions, overall preparation time, 
-                and difficulty level based on a beginner's perspective. 
-                Respond only in valid JSON format without extra markdown.
+export async function getRecipe(menu) {
+  let browser;
+  try {
+    browser = await puppeteer.launch({ headless: true });
+    const page = await browser.newPage();
+    const searchUrl = `https://www.10000recipe.com/recipe/list.html?q=${encodeURIComponent(menu)}`;
+    await page.goto(searchUrl, { waitUntil: "domcontentloaded" });
 
-                Difficulty levels are defined as follows:
-                - Difficulty 1: Recipes with 2 or fewer ingredients and less than 20 minutes preparation time (e.g., instant noodles, toast).
-                - Difficulty 2: Recipes with 3-4 ingredients and up to 40 minutes preparation time (e.g., simple pasta).
-                - Difficulty 3: Recipes with 5-6 ingredients and moderate preparation time (e.g., curry, stir-fry).
-                - Difficulty 4: Recipes with 7-8 ingredients requiring advanced techniques or longer preparation time (e.g., lasagna, steamed dishes).
-                - Difficulty 5: Recipes with 9+ ingredients and complex techniques (e.g., pastries, handmade noodles).
-                `
-            },
-            {
-                role: 'user',
-                content: `다음 형식의 ${menu}에 대한 JSON 형식의 레시피를 한국어로 작성해주세요. 레시피는 초보자도 쉽게 따라할 수 있도록 전체 소요시간, 조리 난이도(설명과 점수), 재료, 단계별 조리 방법을 포함해야 합니다. 각 단계는 재료 준비 방법, 조리 시간, 그리고 요리 과정을 자세하고 친절하게게 설명해주세요:
-                각 단계는 재료 준비 방법, 조리 시간, 그리고 요리 과정을 자세히 설명해주세요:
-                {
-                "name": "메뉴 이름",
-                "totalTime": "전체 소요시간 (예: 30분)",
-                "difficulty": "조리 난이도 설명 (예: 쉬움, 중간, 어려움)",
-                "difficultyScore": "조리 난이도 점수 (1-5)",
-                "ingredients": [
-                    { "ingredient": "재료 이름", "quantity": "대략적인 양" }
-                ],
-                "steps": [
-                    { "id": 1, "step": "첫 번째 단계 설명" },
-                    { "id": 2, "step": "두 번째 단계 설명" }
-                ]
-                }`
-            }
-        ],
-        max_tokens: 700,
-        temperature: 0.7,
+    const recipeLink = await page.evaluate(() => {
+      const firstRecipe = document.querySelector(".common_sp_link");
+      return firstRecipe ? firstRecipe.href : null;
     });
 
-    const cleanedOutput = response.choices[0].message.content.replace(/```json|```/g, '').trim();
-    const recipeData = JSON.parse(cleanedOutput);
+    if (!recipeLink) throw new Error("레시피를 찾을 수 없습니다.");
 
-    const newRecipe = await Recipe.create({
-        userId,
-        name: recipeData.name,
-        totalTime: recipeData.totalTime,
-        difficulty: recipeData.difficulty,
-        difficultyScore: recipeData.difficultyScore,
-        ingredients: JSON.stringify(recipeData.ingredients),
-        steps: JSON.stringify(recipeData.steps),
+    await page.goto(recipeLink, { waitUntil: "domcontentloaded" });
+
+    const recipeData = await page.evaluate(() => {
+      const title = document.querySelector(".view2_summary h3")?.innerText.trim() || "제목 없음";
+      const thumbnail = document.querySelector(".centeredcrop img")?.src || null;
+      const finalImage = document.querySelector(".carouItem.centercrop img")?.src || null;
+
+      // 재료 목록 가져오기
+      const ingredients = Array.from(document.querySelectorAll(".ingre_list_name")).map((el, index) => {
+        const name = el.innerText.trim();
+        const quantity = document.querySelectorAll(".ingre_list_ea")[index]?.innerText.trim() || "수량 없음";
+        return `${name} (${quantity})`;
+      });
+
+
+      const steps = Array.from(document.querySelectorAll(".view_step_cont")).map(step => {
+        const textElement = step.querySelector(".media-body");
+        const toolElement = textElement?.querySelector(".step_add.add_tool"); // 불필요한 요소
+
+        // 오븐, 전자레인지 등 불필요한 텍스트 제거
+        if (toolElement) toolElement.remove();
+
+        const text = textElement?.innerText.trim() || "단계 정보 없음";
+
+        // 이미지가 있을 경우 가져오기
+        const imgElement = step.querySelector(".media-right img");
+        const img = imgElement ? imgElement.src : null;
+
+        return { text, img };
+      });
+
+      // 추가 정보 (몇인분, 난이도, 조리시간)
+        const servingSize = document.querySelector(".view2_summary_info1")?.innerText.trim() || "정보 없음";
+        const cookingTime = document.querySelector(".view2_summary_info2")?.innerText.trim() || "정보 없음";
+        const difficulty = document.querySelector(".view2_summary_info3")?.innerText.trim() || "정보 없음";
+
+        return { 
+            title, 
+            thumbnail, 
+            finalImage, 
+            ingredients, 
+            steps, 
+            servingSize, 
+            difficulty, 
+            cookingTime 
+          };
     });
 
-    return newRecipe;
+    console.log("크롤링된 데이터:", JSON.stringify(recipeData, null, 2));
+
+    await browser.close();
+    return await formatRecipe(recipeData, recipeLink);
+  } catch (error) {
+    console.error("크롤링 오류:", error);
+    if (browser) await browser.close();
+    throw error;
+  }
 }
 
-// 사용자 히스토리 불러오기
-async function getUserHistory(userId) {
-    const recipes = await Recipe.findAll({
-        where: { userId },
-        order: [['createdAt', 'DESC']],
-    });
+async function formatRecipe(recipe, recipeLink) {
+  const minimalRecipe = {
+    title: recipe.title,
+    steps: recipe.steps.map(step => ({ text: step.text })),
+  };
 
-    return recipes.map(recipe => ({
-        ...recipe.toJSON(),
-        ingredients: JSON.parse(recipe.ingredients),
-        steps: JSON.parse(recipe.steps),
-    }));
+  const stepCount = recipe.steps.length;
+  const systemPrompt = `
+    You are a text refinement assistant specialized in cooking instructions. 🍳
+    Your role is to refine Korean cooking instructions, making them more natural, warm, and friendly while maintaining clarity and accuracy.
+
+    ### 🚨 IMPORTANT RULES 🚨
+    - Always respond in **polite and formal Korean (존댓말)**.
+    - **DO NOT** add any explanations or comments outside the JSON format.
+    - **DO NOT** return anything other than JSON.
+    - **DO NOT** merge or split any steps.
+    - **DO NOT** omit, shorten, or simplify any cooking steps.
+    - Ensure that **each instruction is warm and friendly**, using various emojis and exclamation marks.
+    - **Check JSON validity before returning the output.** It must start with '{' and end with '}'.
+
+    ### ✅ Guidelines
+    - The **title** should be a general Korean dish name (e.g., "돼지고기 김치찌개").
+    (❌ Remove brand names, specific names, and phrases like "really delicious.")
+    - Convert **ingredients** into a JSON array.
+    - Refine each **step** into **polite, warm, and natural sentences**.
+    - Remove unrelated personal remarks (e.g., "I should eat and sleep now," "My child loves this dish").
+    `;
+
+   const userPrompt = `
+    ### **Recipe Information**
+    - **Total Steps:** ${stepCount} (❗ Absolutely DO NOT increase or decrease this number.)
+
+    ### **Recipe Steps to Refine**
+    ${JSON.stringify(minimalRecipe.steps, null, 2)}
+
+    ### **Output Example (JSON)**
+    {
+    "title": "돼지고기 김치찌개",
+    "steps": [
+            {"text": "돼지고기는 핏물을 빼주세요. 칼로 썰어주면 더욱 빨리 익어요! 😊🍖"},
+            {"text": "신 김치는 적당한 크기로 잘라주세요. 김치의 톡 쏘는 맛이 더욱 살아나요! 🌶️🥢"},
+            {"text": "냄비에 들기름을 두르고 김치를 볶아주세요. 김치가 노릇노릇해질 때까지 달달 볶으면 감칠맛이 UP! 🔥😋"},
+            {"text": "이제 물을 붓고 팔팔 끓여주세요. 국물이 끓으면서 깊은 맛이 우러나올 거예요! 💨🍲"},
+            {"text": "뚝배기에 담아 맛있게 즐기세요! 따끈한 밥과 함께 먹으면 정말 최고예요! 🍚🔥😋"}
+        ]
+    }
+
+    ### 🔍 VERY IMPORTANT
+    Before returning the output, **double-check that the response is strictly valid JSON.**  
+    Ensure there are **no extra characters, explanations, or markdown formatting**.  
+    The response **must start with '{' and end with '}'** without any additional text.
+    `;
+
+  try {
+    const response = await queryGroq(systemPrompt, userPrompt);
+    if (!response || !response.data || !response.data.choices) {
+      throw new Error("Invalid response from Groq API");
+    }
+
+    let formattedText = response.data.choices[0]?.message?.content?.trim() || "{}";
+
+    formattedText = formattedText.replace(/^```json\s*/i, "").replace(/\s*```$/, "");
+
+    const formattedRecipe = JSON.parse(formattedText);
+
+    return {
+      title: formattedRecipe.title || recipe.title,
+      thumbnail: recipe.thumbnail,
+      finalImage: recipe.finalImage,
+      ingredients: recipe.ingredients,
+      steps: formattedRecipe.steps?.map((step, index) => ({
+        text: step.text,
+        img: recipe.steps[index]?.img || null,
+      })) || recipe.steps,
+      servingSize: recipe.servingSize,  
+      difficulty: recipe.difficulty,   
+      cookingTime: recipe.cookingTime,  
+      recipeLink,
+    };
+  } catch (error) {
+    console.error("Groq API 호출 오류:", error);
+    return { ...recipe, recipeLink };
+  }
 }
 
-export { createRecipe, getUserHistory };
+async function queryGroq(systemPrompt, userPrompt) {
+  try {
+    const response = await axios.post(GROQ_API_URL, {
+      model: "gemma2-9b-it",
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt }
+      ],
+      temperature: 0.5,
+      max_tokens: 1024,
+      top_p: 1,
+      stream: false
+    }, {
+      headers: {
+        "Authorization": `Bearer ${GROQ_API_KEY}`,
+        "Content-Type": "application/json"
+      }
+    });
+    return response;
+  } catch (error) {
+    console.error("Groq API 호출 오류:", error.response ? error.response.data : error.message);
+  }
+}
