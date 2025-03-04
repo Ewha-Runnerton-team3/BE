@@ -1,4 +1,4 @@
-import fs from 'fs';
+/*import fs from 'fs';
 import csvParser from 'csv-parser';
 import path from 'path';
 
@@ -60,4 +60,4 @@ export const recommendMenus = (ingredients) => {
     return matchedMenus
         .sort((a, b) => b.match_rate - a.match_rate) // 내림차순 정렬
         .slice(0, 3); // 상위 3개 선택
-};
+};*/
