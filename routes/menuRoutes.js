@@ -1,6 +1,8 @@
 import express from "express";
 import axios from "axios";
 import dotenv from "dotenv";
+import { getRecipe } from "../services/recipeService.js"; 
+
 
 dotenv.config();
 
@@ -29,19 +31,16 @@ router.post("/recommendation", async (req, res) => {
             return res.status(404).json({ message: "추천 메뉴를 찾을 수 없습니다." });
         }
 
-        // 추천된 3개 메뉴 각각에 대해 레시피 크롤링 요청 
-        const recipePromises = recommendedMenus.map(async (menu) => {
+        // 추천된 메뉴에 대한 레시피 데이터 가져오기 
+        const recipes = await Promise.all(recommendedMenus.map(async (menu) => {
             try {
-                const recipeResponse = await axios.get(`${NODE_SERVER_URL}/recipe?menu=${encodeURIComponent(menu)}`);
-                return { menu, recipe: recipeResponse.data };
+                const recipe = await getRecipe(menu); 
+                return { menu, recipe };
             } catch (error) {
-                console.error(`레시피 크롤링 실패 (${menu}):`, error);
+                console.error(`레시피 가져오기 실패 (${menu}):`, error);
                 return { menu, recipe: null };
             }
-        });
-
-        // 모든 크롤링 요청이 완료될 때까지 대기
-        const recipes = await Promise.all(recipePromises);
+        }));
 
         return res.json({ recommendedMenus, recipes });
 

@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config(); // 환경 변수 먼저 로드
+dotenv.config(); 
 
 import puppeteer from "puppeteer";
 import axios from "axios";
